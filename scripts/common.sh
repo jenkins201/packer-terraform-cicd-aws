@@ -104,11 +104,7 @@ generate_terraform_backend() {
     local TABLE_INDEX
     local TABLE_NAME
 
-    if [[ -z "$1" ]]; then
-        PROJECT_NAME="${PWD##*/}" # use current dir name
-    else
-        PROJECT_NAME=$1
-    fi
+    PROJECT_NAME=$(git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p')
     ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 
     if [[ "${AWS_DEFAULT_REGION}" = "us-east-1" ]]; then
@@ -118,6 +114,13 @@ generate_terraform_backend() {
     fi
 
     BUCKET_NAME="terraform-tfstate-${ACCOUNT_ID}"
+
+    echo
+    echo "PROJECT_NAME=${PROJECT_NAME}"
+    echo "ACCOUNT_ID=${ACCOUNT_ID}"
+    echo "BUCKET_NAME=${BUCKET_NAME}"
+    echo
+
     BUCKET_EXISTS=$(aws s3api list-buckets | jq ".Buckets[] | select(.Name == \"${BUCKET_NAME}\")")
     if [[ -z "${BUCKET_EXISTS}" ]]; then
         echo "Creating Terraform State S3 Bucket ${BUCKET_NAME} in ${AWS_DEFAULT_REGION}"
