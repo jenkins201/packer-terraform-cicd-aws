@@ -49,6 +49,12 @@ GIT_BRANCH=$(get_git_branch)
 TF_WORKSPACE=$(map_branch_to_workspace ${GIT_BRANCH})
 TF_VARS_FILE=$(map_branch_to_tfvars ${GIT_BRANCH})
 
+echo
+echo "GIT_BRANCH=${GIT_BRANCH}"
+echo "TF_WORKSPACE=${TF_WORKSPACE}"
+echo "TF_VARS_FILE=${TF_VARS_FILE}"
+echo
+
 # create the S3 bucket, DynamoDB & matching backend.tf
 generate_terraform_backend
 
