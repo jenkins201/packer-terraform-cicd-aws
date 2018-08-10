@@ -58,21 +58,21 @@ terraform workspace new ${TF_WORKSPACE} || true
 echo "Selecting workspace: ${TF_WORKSPACE}"
 terraform workspace select ${TF_WORKSPACE}
 case "${TF_ACTION}" in
-		plan)
+    plan)
         [[ ! -d plan ]] && mkdir plan
-				terraform plan -var-file=${TF_VARS_FILE} -out=plan/plan.out
-				;;
-		apply)
-				terraform apply plan/plan.out
-				terraform output
+        terraform plan -var-file=${TF_VARS_FILE} -out=plan/plan.out
+        ;;
+    apply)
+        terraform apply plan/plan.out
+        terraform output
         # once more for the camera
-				terraform output -json > output.json
-				;;
-		destroy)
-				terraform destroy -var-file=${TF_VARS_FILE} -auto-approve
+        terraform output -json > output.json
+        ;;
+    destroy)
+        terraform destroy -var-file=${TF_VARS_FILE} -auto-approve
         terraform workspace select default
         terraform workspace delete ${TF_WORKSPACE}
-				;;
+        ;;
 esac
 
 echo "Done."
